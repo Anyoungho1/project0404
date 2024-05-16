@@ -1,0 +1,97 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<body>
+{% if question_list %}
+    <div class="container my-3">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">작성일</th>
+
+            </tr>
+            </thead>
+            <tbody>
+                {% for question in question_list %}
+            <tr>
+                <td>{{(question_list.page -1)*question_list.per_page + loop.index}}</td>
+                <td>
+                    <a href="{{url_for('question.detail',question_id=question.id)}}">
+                        {{question.subject}}
+                        {% if question.answer_set|length > 0 %}
+                        <span>[{{question.answer_set|length}}]</span>
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    {{question.user.username}}
+                </td>
+                <td>{{question.create_date|datetime}}</td>
+            </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+
+   {% include "paging_part.html" %}
+
+    <a href="{{url_for('question.create')}}">질문등록</a>
+
+    {% else %}
+    <p>데이터가 없습니다.</p>
+    {% endif %}
+    <select name="test" id="test">
+        <option value="hello1">hello1</option>
+        <option value="hello2">hello2</option>
+        <option value="hello3">hello2</option>
+    </select>
+    {% include "weather_part.html" %}
+    <div id="show_weather">
+        <div>
+            <span>강수형태</span>:
+            <span id="PTY"></span>
+        </div>
+        <div>
+            <span>기온</span>
+            <span id="T1H"></span><span>도</span>
+
+        </div>
+
+        <div>
+            <span>습도</span>
+            <span id="REH"></span><span>%</span>
+
+        </div>
+        <div>
+            <span>시간당 강수량</span>
+            <span id="RN1"></span> <span>mm</span>
+
+        </div>
+        <div>
+            <span>풍향</span>
+            <span id="VEC"></span>
+        </div>
+        <div>
+            <span>풍속</span>
+            <span id="WSD"></span> <span>m/s</span>
+
+        </div>
+    </div>
+    <input type="hidden" id="city" value="/서울 강동구 천호제1동">
+
+{% endblock %}
+    
+{% block script %}
+<script>
+$(document).ready(function(){
+    getWeather();
+})
+
+</script>
+    
+{% endblock %}
